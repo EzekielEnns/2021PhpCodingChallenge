@@ -1,6 +1,5 @@
 <?php 
 namespace MyApp;
-include_once __DIR__ . '/../../src/Game.php';
 use PHPUnit\Framework\TestCase;
 
 class TicTacToeTest extends TestCase{

@@ -1,0 +1,41 @@
+<!--
+  this is pretty dirty but its nice and quick
+  i would have done vue or react but the time restraints made
+  me hesitant to learn how to hook them up with php and nginx backend
+-->
+<html>
+    <head>
+    <title>Tic Tac Toe - Stage.js</title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, height=device-height" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stage.js/0.8.2/stage.web.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="src/DomUI.js"></script>
+    <script src="src/Websocket.js"></script>
+    <script src="src/Game.js"></script>
+    <script src="app.js"></script>
+    <style>
+      body{
+        margin: 0;
+      }
+      #info{
+        display:flex;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        gap: 10%;
+      }
+      span{
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="info">
+      <h1 id="user"></h1>
+      <h1 id="spacer"><input id="name" type='text' placeholder='Enter Your Name'></input></h1>
+      <h1 id="opponent"></h1>
+    </div>
+  </body>
+  </html>

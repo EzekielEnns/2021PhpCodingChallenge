@@ -53,7 +53,7 @@ class ProcessTest extends TestCase{
         $this->assertTrue(ProcessTest::$process->matches->inLobby($from));
         //check if return for lobby is valid
         $this->assertSame($from,$result['Clients'][0]);
-        $this->assertSame(1,count($result['msg']->names));
+        $this->assertSame(1,count($result['msg']->players));
         
         //check if update worked
         $matches = ProcessTest::$process->matches;
@@ -61,13 +61,13 @@ class ProcessTest extends TestCase{
     }
 
     public function testOnMessageSecondPlayer(){
+         
         $from = ProcessTest::$testyBois['bob'];
         $from2 = ProcessTest::$testyBois['bill'];
         $this->msg->name = 'bill';
         $this->msg->action->i = 4;
         $this->msg->action->v = 2;
         $result = ProcessTest::$process->onMessage($from2,$this->msg);
-        
         //check if in active
         $this->assertFalse(ProcessTest::$process->matches->inLobby($from));
         $this->assertFalse(ProcessTest::$process->matches->inLobby($from2));
@@ -76,7 +76,8 @@ class ProcessTest extends TestCase{
         $matches = ProcessTest::$process->matches;
         $this->assertSame($matches->get($from2)['game']->getBoard()[4],
                           $matches->get($from)['game']->getBoard()[4]);
-        $this->assertSame(2,count($result['msg']->names));
+         
+        $this->assertSame(2,count($result['msg']->players));
         
     }
     //tests if process can make a lobby and active match
@@ -92,7 +93,7 @@ class ProcessTest extends TestCase{
         $this->assertTrue(ProcessTest::$process->matches->inLobby($from));
         //check if return for lobby is valid
         $this->assertSame($from,$result['Clients'][0]);
-        $this->assertSame(1,count($result['msg']->names));
+        $this->assertSame(1,count($result['msg']->players));
         
         //check if update worked
         $matches = ProcessTest::$process->matches;
@@ -115,7 +116,7 @@ class ProcessTest extends TestCase{
         $matches = ProcessTest::$process->matches;
         $this->assertSame($matches->get($from2)['game']->getBoard()[4],
                           $matches->get($from)['game']->getBoard()[4]);
-        $this->assertSame(2,count($result['msg']->names));
+        $this->assertSame(2,count($result['msg']->players));
     }
     
     public function testOnMessageWin(){
@@ -129,19 +130,25 @@ class ProcessTest extends TestCase{
         $this->msg->action->i = 5;
         $this->msg->action->v = 2;
         $result = ProcessTest::$process->onMessage($from2,$this->msg);
+         
         $this->msg->name = 'zeek';
-        $this->msg->action->i = 0;
+        $this->msg->action->i = 2;
         $this->msg->action->v = 1;
         $result = ProcessTest::$process->onMessage($from,$this->msg);
+        $fKey = spl_object_hash($from);
+         
+       
         $this->msg->name = 'cloe';
         $this->msg->action->i = 3;
         $this->msg->action->v = 2;
         $result = ProcessTest::$process->onMessage($from2,$this->msg);
-
+        
         //check that cloe won
-        $this->assertTrue($result['msg']->won);
+        $this->assertTrue($result["msg"]->won);
         //check that cloe and zeek are in the lobby
         $this->assertTrue(ProcessTest::$process->matches->inLobby($from));
+        
+        //TODO FIX ERRROR
         $this->assertTrue(ProcessTest::$process->matches->inLobby($from2));
         
     }
@@ -154,8 +161,15 @@ class ProcessTest extends TestCase{
         $this->msg->action->i = 0;
         $this->msg->action->v = 1;
         $result = ProcessTest::$process->onMessage($from,$this->msg);
-        $this->assertFalse(ProcessTest::$process->matches->inLobby($from));
+        $this->assertTrue(ProcessTest::$process->matches->inLobby($from));
         $this->assertFalse(ProcessTest::$process->matches->inLobby($from2));
         
-    } 
+    }
+
+    public function testOnMessageMarkerUpdate(){
+        $from = spl_object_hash(ProcessTest::$testyBois['bill']);
+        $from2 = spl_object_hash(ProcessTest::$testyBois['bob']);
+        $data = ProcessTest::$process->userData;
+        $this->assertNotSame($data[$from]->marker,$data[$from2]->marker);
+    }
 }
